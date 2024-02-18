@@ -3,3 +3,4 @@
 **/.env
 **/.DS_Store
 packer/proxmox/credentials.pkr.hcl
+terraform\proxmox\credentials.auto.tfvars
