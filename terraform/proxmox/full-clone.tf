@@ -1,49 +1,31 @@
-# Proxmox Full-Clone
-# ---
-# Create a new VM from a clone
+resource "proxmox_virtual_environment_vm" "oracle_vm" {
+  name        = "terraform-provider-proxmox-oracle-vm"
+  description = "Managed by Terraform"
+  tags        = ["terraform", "oracle"]
 
-resource "proxmox_vm_qemu" "your-vm" {
-    
-    # VM General Settings
-    target_node = "your-proxmox-node"
-    vmid = "100"
-    name = "vm-name"
-    desc = "Description"
+  node_name = "first-node"
+  vm_id     = 4321
 
-    # VM Advanced General Settings
-    onboot = true 
+  agent {
+    # read 'Qemu guest agent' section, change to true only when ready
+    enabled = false
+  }
 
-    # VM OS Settings
-    clone = "your-clone"
+  clone {
+    node_name = "oracle-template"
+    vm_id     = 101
+    full      = true
+  }
 
-    # VM System Settings
-    agent = 1
-    
-    # VM CPU Settings
-    cores = 1
-    sockets = 1
-    cpu = "host"    
-    
-    # VM Memory Settings
-    memory = 1024
+  cpu {
+    cores = 2
+  }
 
-    # VM Network Settings
-    network {
-        bridge = "vmbr0"
-        model  = "virtio"
-    }
+  memory {
+    dedicated = 4048
+  }
 
-    # VM Cloud-Init Settings
-    os_type = "cloud-init"
-
-    # (Optional) IP Address and Gateway
-    # ipconfig0 = "ip=0.0.0.0/0,gw=0.0.0.0"
-    
-    # (Optional) Default User
-    # ciuser = "your-username"
-    
-    # (Optional) Add your SSH KEY
-    # sshkeys = <<EOF
-    # #YOUR-PUBLIC-SSH-KEY
-    # EOF
+  network_device {
+    bridge = "vmbr0"
+  }
 }
